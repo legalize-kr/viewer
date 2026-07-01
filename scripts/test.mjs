@@ -50,6 +50,7 @@ function assert(condition, message) {
 }
 
 const manifest = JSON.parse(await readFile(resolve(extension, "manifest.json"), "utf8"));
+const buildExtensionJs = await readFile(resolve(root, "scripts", "build-extension.mjs"), "utf8");
 const serviceWorkerJs = await readFile(resolve(extension, "service-worker.js"), "utf8");
 const attachmentCorsRules = JSON.parse(await readFile(resolve(extension, "rules/law-attachments-cors.json"), "utf8"));
 assert(manifest.manifest_version === 3, "manifest must be MV3");
@@ -61,6 +62,7 @@ const digest = createHash("sha256").update(keyBytes).digest().subarray(0, 16);
 const alphabet = "abcdefghijklmnop";
 const extensionId = [...digest].map((byte) => alphabet[byte >> 4] + alphabet[byte & 15]).join("");
 assert(extensionId === "hceodioeamflhfelpepcimgjpbgoooaf", "stable extension ID mismatch");
+assert(buildExtensionJs.includes("delete webStoreManifest.key"), "Chrome Web Store build must omit manifest key");
 assert(manifest.permissions.includes("storage"), "manifest must include storage permission");
 assert(
   manifest.permissions.includes("declarativeNetRequestWithHostAccess"),

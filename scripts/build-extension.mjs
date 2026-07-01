@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
@@ -17,5 +17,8 @@ await rm(target, { recursive: true, force: true });
 await mkdir(target, { recursive: true });
 await cp(source, target, { recursive: true });
 
-console.log(`built ${target}`);
+const webStoreManifest = { ...manifest };
+delete webStoreManifest.key;
+await writeFile(resolve(target, "manifest.json"), `${JSON.stringify(webStoreManifest, null, 2)}\n`);
 
+console.log(`built ${target}`);
