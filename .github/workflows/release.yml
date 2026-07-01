@@ -1,0 +1,67 @@
+name: Release extension
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build extension
+        run: node scripts/build-extension.mjs
+
+      - name: Package extension ZIP
+        id: package
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          zip_name="legalize-kr-viewer-${version}.zip"
+          (cd dist-extension && zip -r "../${zip_name}" .)
+          echo "zip_name=${zip_name}" >>"$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release asset
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+        run: |
+          if ! gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release create "$TAG_NAME" \
+              --title "$TAG_NAME" \
+              --notes "Chrome extension package for the Legalize-KR viewer."
+          fi
+          gh release upload "$TAG_NAME" "$ZIP_NAME" --clobber
+
+      # Publishes to the Chrome Web Store only when the required OAuth secrets
+      # are configured. Add repository secrets CWS_EXTENSION_ID, CWS_CLIENT_ID,
+      # CWS_CLIENT_SECRET and CWS_REFRESH_TOKEN to enable this step.
+      - name: Publish to Chrome Web Store
+        env:
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+        if: ${{ env.CWS_EXTENSION_ID != '' }}
+        run: |
+          npx --yes chrome-webstore-upload-cli@3 upload \
+            --source "$ZIP_NAME" \
+            --extension-id "$CWS_EXTENSION_ID" \
+            --client-id "$CWS_CLIENT_ID" \
+            --client-secret "$CWS_CLIENT_SECRET" \
+            --refresh-token "$CWS_REFRESH_TOKEN" \
+            --auto-publish
