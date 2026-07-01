@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "responseHeaders": [
+        {
+          "header": "Access-Control-Allow-Origin",
+          "operation": "set",
+          "value": "*"
+        },
+        {
+          "header": "Access-Control-Allow-Methods",
+          "operation": "set",
+          "value": "GET, OPTIONS"
+        },
+        {
+          "header": "Access-Control-Expose-Headers",
+          "operation": "set",
+          "value": "Content-Disposition, Content-Type"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||law.go.kr/*flDownload.do",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

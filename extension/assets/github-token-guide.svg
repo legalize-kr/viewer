@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">GitHub 접근 토큰 발급 안내</title>
+  <desc id="desc">GitHub 설정에서 fine-grained personal access token을 만들고, Legalize-KR 설정에 붙여넣는 흐름</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eff6ff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect width="960" height="520" rx="28" fill="url(#bg)"/>
+  <rect x="52" y="54" width="856" height="412" rx="22" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="84" y="104" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="30" font-weight="800">GitHub 접근 토큰은 이렇게 사용됩니다</text>
+  <text x="84" y="140" fill="#475569" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="17">비밀번호가 아니라 GitHub 요청 한도를 높이기 위한 읽기 전용 접근 키입니다.</text>
+
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <rect x="84" y="190" width="176" height="168" rx="18" fill="#eef2ff" stroke="#bfdbfe"/>
+    <circle cx="118" cy="224" r="18" fill="#2563eb"/>
+    <text x="112" y="231" fill="#ffffff" font-size="18" font-weight="800">1</text>
+    <text x="112" y="270" fill="#0f172a" font-size="18" font-weight="800">GitHub 설정</text>
+    <text x="112" y="302" fill="#475569" font-size="15">프로필 메뉴에서</text>
+    <text x="112" y="326" fill="#475569" font-size="15">Settings로 이동</text>
+
+    <rect x="292" y="190" width="176" height="168" rx="18" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <circle cx="326" cy="224" r="18" fill="#16a34a"/>
+    <text x="320" y="231" fill="#ffffff" font-size="18" font-weight="800">2</text>
+    <text x="320" y="270" fill="#0f172a" font-size="18" font-weight="800">Fine-grained</text>
+    <text x="320" y="302" fill="#475569" font-size="15">Developer settings</text>
+    <text x="320" y="326" fill="#475569" font-size="15">Personal access tokens</text>
+
+    <rect x="500" y="190" width="176" height="168" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+    <circle cx="534" cy="224" r="18" fill="#f97316"/>
+    <text x="528" y="231" fill="#ffffff" font-size="18" font-weight="800">3</text>
+    <text x="528" y="270" fill="#0f172a" font-size="18" font-weight="800">읽기 권한만</text>
+    <text x="528" y="302" fill="#475569" font-size="15">Repository contents</text>
+    <text x="528" y="326" fill="#475569" font-size="15">Read-only 선택</text>
+
+    <rect x="708" y="190" width="176" height="168" rx="18" fill="#fdf2f8" stroke="#fbcfe8"/>
+    <circle cx="742" cy="224" r="18" fill="#db2777"/>
+    <text x="736" y="231" fill="#ffffff" font-size="18" font-weight="800">4</text>
+    <text x="736" y="270" fill="#0f172a" font-size="18" font-weight="800">설정에 붙여넣기</text>
+    <text x="736" y="302" fill="#475569" font-size="15">GitHub 접근 토큰</text>
+    <text x="736" y="326" fill="#475569" font-size="15">칸에 저장</text>
+
+    <path d="M264 274h22" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M472 274h22" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M680 274h22" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+
+    <rect x="84" y="386" width="800" height="42" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="112" y="413" fill="#334155" font-size="16" font-weight="700">주의: 토큰은 비밀번호처럼 다루고, 이 도구에는 읽기 전용 권한만 사용하세요.</text>
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-06-30T00:00:00Z",
+  "sourceRef": "main",
+  "description": "Minimal packaged metadata index for lazy loading smoke coverage.",
+  "shards": {
+    "legalize-kr": {
+      "path": "metadata/legalize-kr.json",
+      "count": 1
+    },
+    "precedent-kr": {
+      "path": "metadata/precedent-kr.json",
+      "count": 1
+    },
+    "admrule-kr": {
+      "path": "metadata/admrule-kr.json",
+      "count": 1
+    },
+    "ordinance-kr": {
+      "path": "metadata/ordinance-kr.json",
+      "count": 1
+    }
+  }
+}

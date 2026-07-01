@@ -1,0 +1,9 @@
+{
+  "name": "kr.legalize.viewer_bridge",
+  "description": "Legalize-KR Viewer local Git bridge prototype",
+  "path": "__ABSOLUTE_PATH_TO_VIEWER_PLUGINS__/native-host/host.py",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://hceodioeamflhfelpepcimgjpbgoooaf/"
+  ]
+}

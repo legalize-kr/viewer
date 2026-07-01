@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Legalize-KR">
+  <defs>
+    <linearGradient id="bg" x1="20" x2="108" y1="12" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172033" offset="0" />
+      <stop stop-color="#0f172a" offset="1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="26" x2="102" y1="24" y2="102" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3b82f6" offset="0" />
+      <stop stop-color="#2563eb" offset="1" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)" />
+  <circle cx="64" cy="64" r="42" fill="url(#accent)" opacity="0.18" />
+  <path d="M64 28v62" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" />
+  <path d="M38 47h52" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" />
+  <path d="M48 47 33 77h30L48 47Z" fill="none" stroke="#bfdbfe" stroke-width="6" stroke-linejoin="round" />
+  <path d="M80 47 65 77h30L80 47Z" fill="none" stroke="#bfdbfe" stroke-width="6" stroke-linejoin="round" />
+  <path d="M43 92h42" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" />
+  <path d="M54 103h20" fill="none" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" />
+</svg>

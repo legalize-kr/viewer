@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Legalize-KR Viewer",
+  "short_name": "Legalize-KR",
+  "version": "0.1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwqcKjD+LCOijJPp7vhHa0TVzILQDVlyLB/EU1NzDiOHLwN7e3Z/ehWytpd6uu9TOLJexcUQnaFzEUrfUVruCe3qqHSnPnnrL3aA+yz6d8oS7+xe7m1HRbHWrNWCR5GO6u0gntqYQX1sIi9U7Z+hGba6PWRGfnkbxtdQKAhmNFbVUSi628kwf2KLcWHtHxhKwNdIugFcjnK1wjUajZJ1KFzCWKc6fvyVAtolvWStnSIcOf36kefI/+bTC29OgFhUuV1dtfedFjztMnvewAhCy4FmH57DUKvFjACRfg9m6Fwt5IxMu66EG14kRul6jbKUl14Ubv/+qGHKgeQ9WrSeA1wIDAQAB",
+  "description": "법령, 판례, 행정규칙, 자치법규 Markdown Git 이력을 탐색합니다.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Legalize-KR Viewer 열기",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; worker-src 'self'"
+  },
+  "options_page": "options.html",
+  "permissions": ["storage", "declarativeNetRequestWithHostAccess"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "law_attachments_cors",
+        "enabled": true,
+        "path": "rules/law-attachments-cors.json"
+      }
+    ]
+  },
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://www.law.go.kr/*",
+    "http://www.law.go.kr/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ]
+}

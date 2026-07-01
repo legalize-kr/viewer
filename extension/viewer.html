@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Legalize-KR Viewer</title>
+    <link rel="icon" href="icons/icon-32.png" />
+    <link rel="stylesheet" href="src/styles.css" />
+    <script src="vendor/markdown-it.js"></script>
+    <script type="module" src="src/app.js"></script>
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true" focusable="false">
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-3.5-3.5"></path>
+      </symbol>
+      <symbol id="icon-star" viewBox="0 0 24 24">
+        <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.2l-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3z"></path>
+      </symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8"></circle>
+        <path d="M12 8v5l3 2"></path>
+      </symbol>
+      <symbol id="icon-list" viewBox="0 0 24 24">
+        <path d="M8 6h12M8 12h12M8 18h12"></path>
+        <path d="M4 6h.01M4 12h.01M4 18h.01"></path>
+      </symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v17H7.5A2.5 2.5 0 0 1 5 17.5z"></path>
+        <path d="M9 7h7M9 11h5"></path>
+      </symbol>
+      <symbol id="icon-compare" viewBox="0 0 24 24">
+        <path d="M7 7h11l-3-3"></path>
+        <path d="M17 17H6l3 3"></path>
+        <path d="M18 7l-3 3M6 17l3-3"></path>
+      </symbol>
+      <symbol id="icon-attachment" viewBox="0 0 24 24">
+        <path d="m8 13 6.6-6.6a3 3 0 0 1 4.2 4.2l-8.2 8.2a4.5 4.5 0 0 1-6.4-6.4l8.4-8.4"></path>
+      </symbol>
+      <symbol id="icon-file-hwp" viewBox="0 0 24 24">
+        <path d="M6 3h8l4 4v14H6z"></path>
+        <path d="M14 3v5h5"></path>
+        <path d="M8 14h8M8 17h6"></path>
+      </symbol>
+      <symbol id="icon-file-pdf" viewBox="0 0 24 24">
+        <path d="M6 3h8l4 4v14H6z"></path>
+        <path d="M14 3v5h5"></path>
+        <path d="M9 14c2.4 1.2 4.5 1 6-.5"></path>
+        <path d="M10 18c.8-2.4 1.6-4.5 2.5-6.5"></path>
+      </symbol>
+      <symbol id="icon-reference" viewBox="0 0 24 24">
+        <path d="M14 4h6v6"></path>
+        <path d="m10 14 10-10"></path>
+        <path d="M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"></path>
+      </symbol>
+      <symbol id="icon-view" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7z"></path>
+      </symbol>
+      <symbol id="icon-source" viewBox="0 0 24 24">
+        <ellipse cx="12" cy="5" rx="7" ry="3"></ellipse>
+        <path d="M5 5v7c0 1.7 3.1 3 7 3s7-1.3 7-3V5"></path>
+        <path d="M5 12v7c0 1.7 3.1 3 7 3s7-1.3 7-3v-7"></path>
+      </symbol>
+      <symbol id="icon-document" viewBox="0 0 24 24">
+        <path d="M6 3h8l4 4v14H6z"></path>
+        <path d="M14 3v5h5"></path>
+        <path d="M9 13h6M9 17h6"></path>
+      </symbol>
+      <symbol id="icon-chevron-left" viewBox="0 0 24 24">
+        <path d="m15 18-6-6 6-6"></path>
+      </symbol>
+      <symbol id="icon-chevron-right" viewBox="0 0 24 24">
+        <path d="m9 6 6 6-6 6"></path>
+      </symbol>
+      <symbol id="icon-theme-light" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </symbol>
+      <symbol id="icon-theme-dark" viewBox="0 0 24 24">
+        <path d="M20 14.6A7.5 7.5 0 0 1 9.4 4 8.5 8.5 0 1 0 20 14.6z"></path>
+      </symbol>
+      <symbol id="icon-theme-system" viewBox="0 0 24 24">
+        <rect x="4" y="5" width="16" height="11" rx="2"></rect>
+        <path d="M8 20h8M12 16v4"></path>
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.2a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4A2 2 0 0 0 4 9.8l.2.1a2 2 0 0 1 1 1.7v.8a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.2a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.2a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.8a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.2a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"></path>
+      </symbol>
+    </svg>
+    <div id="app" class="app-shell">
+      <header class="topbar">
+        <button id="homeButton" class="brand" type="button">Legalize-KR</button>
+        <label class="field search">
+          <span>경로/제목 검색</span>
+          <input id="searchInput" type="search" placeholder="예: 형법, 법률.md, 대법원" />
+        </label>
+        <div class="source-status" id="sourceStatus"></div>
+        <div class="runtime-badge" id="runtimeBadge" title="Extension runtime"></div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="테마: 시스템 설정" title="테마 전환">
+          <svg class="topbar-icon" aria-hidden="true" focusable="false"><use href="#icon-theme-system"></use></svg>
+        </button>
+        <button id="settingsButton" class="theme-toggle settings-toggle" type="button" aria-label="설정 열기" title="설정 열기">
+          <svg class="topbar-icon" aria-hidden="true" focusable="false"><use href="#icon-settings"></use></svg>
+        </button>
+      </header>
+
+      <main id="layout" class="layout">
+        <aside id="leftPanel" class="panel left-panel">
+          <div class="panel-tabs" role="tablist" aria-label="좌측 패널">
+            <button class="panel-tab active" type="button" role="tab" aria-selected="true" data-panel-tab-group="left" data-panel-tab-target="leftNavigationTab">
+              <svg class="tab-icon tab-icon-search"><use href="#icon-search"></use></svg><span>탐색</span>
+            </button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab-group="left" data-panel-tab-target="leftFavoritesTab">
+              <svg class="tab-icon tab-icon-star"><use href="#icon-star"></use></svg><span>즐겨찾기</span>
+            </button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab-group="left" data-panel-tab-target="leftRecentTab">
+              <svg class="tab-icon"><use href="#icon-clock"></use></svg><span>최근 문서</span>
+            </button>
+          </div>
+          <section id="leftNavigationTab" class="panel-tab-panel" role="tabpanel">
+            <label class="field panel-repo-field">
+              <span>저장소</span>
+              <select id="repoSelect"></select>
+            </label>
+            <section id="searchPanel" class="search-panel hidden" aria-live="polite">
+              <div class="search-panel-head">
+                <strong id="searchTitle">검색 결과</strong>
+                <button id="clearSearchButton" class="ghost-button" type="button">지우기</button>
+              </div>
+              <div id="searchSummary" class="muted"></div>
+            </section>
+            <div id="tree" class="tree"></div>
+          </section>
+          <section id="leftFavoritesTab" class="panel-tab-panel hidden" role="tabpanel">
+            <div id="favoritesList" class="mini-list"></div>
+          </section>
+          <section id="leftRecentTab" class="panel-tab-panel hidden" role="tabpanel">
+            <div id="recentDocsList" class="mini-list"></div>
+          </section>
+        </aside>
+        <div
+          id="leftPanelRail"
+          class="panel-rail left-panel-rail"
+          data-resize-panel="left"
+          title="드래그하거나 스크롤하여 좌측 패널 너비 조절"
+        >
+          <button id="toggleLeftPanelRail" class="panel-rail-button" type="button" aria-controls="leftPanel" aria-expanded="true" aria-label="좌측 패널 닫기">
+            <svg class="rail-icon"><use href="#icon-chevron-left"></use></svg>
+          </button>
+        </div>
+
+        <section class="workspace">
+          <div id="emptyState" class="empty-state">
+            <h1>좌측에서 저장소를 선택해주세요</h1>
+            <div class="quick-start" aria-label="빠른 시작">
+              <button class="quick-repo" type="button" data-repo="legalize-kr">법령</button>
+              <button class="quick-repo" type="button" data-repo="precedent-kr">판례</button>
+              <button class="quick-repo" type="button" data-repo="admrule-kr">행정규칙</button>
+              <button class="quick-repo" type="button" data-repo="ordinance-kr">자치법규</button>
+            </div>
+          </div>
+
+          <article id="documentView" class="document-view hidden">
+            <header class="document-head">
+              <div>
+                <div id="docMeta" class="muted"></div>
+                <h1 id="docTitle"></h1>
+                <div id="docPath" class="path"></div>
+              </div>
+              <div class="actions">
+                <button id="favoriteButton" class="button icon-button favorite-toggle" type="button" aria-pressed="false" aria-label="즐겨찾기 추가" title="즐겨찾기 추가" data-tooltip="즐겨찾기 추가">
+                  <svg class="favorite-icon" aria-hidden="true" focusable="false"><use href="#icon-star"></use></svg>
+                </button>
+                <div class="source-view-wrap">
+                  <button id="sourceViewButton" class="button icon-button source-view-button" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="원문 보기" title="원문 보기" data-tooltip="원문 보기">
+                    <svg class="source-view-icon" aria-hidden="true" focusable="false"><use href="#icon-document"></use></svg>
+                  </button>
+                  <div id="sourceViewMenu" class="source-view-menu" role="menu" hidden>
+                    <a id="sourceGithubLink" role="menuitem" target="_blank" rel="noreferrer">GitHub에서 Markdown 보기</a>
+                    <a id="sourceLawLink" role="menuitem" target="_blank" rel="noreferrer" hidden>국가법령정보센터 보기</a>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <nav class="tabs" aria-label="문서 보기">
+              <button class="tab active" type="button" data-tab="body"><svg class="tab-icon"><use href="#icon-book"></use></svg><span>본문</span></button>
+              <button class="tab" type="button" data-tab="history"><svg class="tab-icon"><use href="#icon-clock"></use></svg><span>변경 내역</span></button>
+              <button class="tab" type="button" data-tab="attachments"><svg class="tab-icon"><use href="#icon-attachment"></use></svg><span>첨부</span></button>
+              <button class="tab" type="button" data-tab="references"><svg class="tab-icon"><use href="#icon-reference"></use></svg><span>관련 링크</span></button>
+            </nav>
+
+            <section id="bodyTab" class="tab-panel">
+              <div id="frontmatter" class="frontmatter"></div>
+              <div id="markdownBody" class="markdown-body"></div>
+            </section>
+
+            <section id="historyTab" class="tab-panel hidden">
+              <div id="historyTimeline" class="history-timeline"></div>
+              <div class="compare-toolbar">
+                <span id="compareStatus" class="muted">비교할 개정 이력을 2개 선택하세요.</span>
+                <label class="check"><input id="onlyChanged" type="checkbox" checked /> 바뀐 조문만 보기</label>
+                <select id="compareMode" class="hidden" aria-hidden="true" tabindex="-1">
+                  <option value="split">나란히 보기</option>
+                  <option value="unified">한눈에 보기</option>
+                </select>
+                <div class="segmented-control" role="group" aria-label="Diff 보기 방식">
+                  <button class="segmented-option active" type="button" data-compare-mode="split" aria-pressed="true">나란히 보기</button>
+                  <button class="segmented-option" type="button" data-compare-mode="unified" aria-pressed="false">한눈에 보기</button>
+                </div>
+              </div>
+              <div class="history-compare-layout">
+                <div id="compareView" class="compare-view"></div>
+                <div id="historyList" class="history-list"></div>
+              </div>
+            </section>
+
+            <section id="attachmentsTab" class="tab-panel hidden">
+              <div id="attachmentsList" class="attachments-list"></div>
+              <section id="attachmentPreview" class="attachment-preview hidden" aria-live="polite">
+                <div class="attachment-preview-head">
+                  <strong id="attachmentPreviewTitle">첨부 미리보기</strong>
+                  <div class="attachment-preview-actions">
+                    <button id="downloadAttachmentPreview" class="button link-button" type="button" disabled>다운로드</button>
+                    <button id="closeAttachmentPreview" class="ghost-button" type="button">닫기</button>
+                  </div>
+                </div>
+                <div id="attachmentPreviewStatus" class="state-line"></div>
+                <div id="attachmentPreviewBody" class="attachment-preview-body"></div>
+              </section>
+            </section>
+
+            <section id="referencesTab" class="tab-panel hidden">
+              <div id="referenceGraph" class="reference-list"></div>
+            </section>
+          </article>
+        </section>
+
+        <div
+          id="rightPanelRail"
+          class="panel-rail right-panel-rail"
+          data-resize-panel="right"
+          title="드래그하거나 스크롤하여 우측 패널 너비 조절"
+        >
+          <button id="toggleRightPanelRail" class="panel-rail-button" type="button" aria-controls="rightPanel" aria-expanded="true" aria-label="우측 패널 닫기">
+            <svg class="rail-icon"><use href="#icon-chevron-right"></use></svg>
+          </button>
+        </div>
+        <aside id="rightPanel" class="panel right-panel">
+          <div class="panel-tabs" role="tablist" aria-label="우측 패널">
+            <button class="panel-tab active" type="button" role="tab" aria-selected="true" data-panel-tab-group="right" data-panel-tab-target="rightTocTab">
+              <svg class="tab-icon"><use href="#icon-list"></use></svg><span>목차</span>
+            </button>
+          </div>
+          <section id="rightTocTab" class="panel-tab-panel" role="tabpanel">
+            <div id="toc" class="toc"></div>
+          </section>
+        </aside>
+      </main>
+
+      <dialog id="settingsDialog" class="settings-dialog">
+        <form method="dialog">
+          <header class="dialog-head">
+            <strong>설정</strong>
+            <button class="ghost-button dialog-close-button" value="close" type="submit" aria-label="설정 닫기" title="설정 닫기">×</button>
+          </header>
+          <div class="panel-tabs settings-tabs" role="tablist" aria-label="설정">
+            <button class="panel-tab active" type="button" role="tab" aria-selected="true" data-panel-tab-group="settings" data-panel-tab-target="settingsViewTab">
+              <svg class="tab-icon"><use href="#icon-view"></use></svg><span>보기</span>
+            </button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab-group="settings" data-panel-tab-target="settingsSourceTab">
+              <svg class="tab-icon"><use href="#icon-source"></use></svg><span>데이터 출처</span>
+            </button>
+            <button class="panel-tab" type="button" role="tab" aria-selected="false" data-panel-tab-group="settings" data-panel-tab-target="settingsLicenseTab">
+              <svg class="tab-icon"><use href="#icon-reference"></use></svg><span>라이선스</span>
+            </button>
+          </div>
+          <section id="settingsViewTab" class="panel-tab-panel settings-tab-panel" role="tabpanel">
+            <label class="field">
+              <span>테마</span>
+              <select id="themeSetting">
+                <option value="system">시스템 설정</option>
+                <option value="light">밝게 보기</option>
+                <option value="dark">어둡게 보기</option>
+              </select>
+            </label>
+            <section class="settings-section font-size-section" aria-labelledby="fontSizeHeading">
+              <h2 id="fontSizeHeading">폰트 크기</h2>
+              <label class="font-size-row">
+                <span>본문</span>
+                <input id="fontSizeSetting" type="range" min="14" max="22" step="1" />
+                <output id="fontSizeValue" for="fontSizeSetting">16px</output>
+              </label>
+              <label class="font-size-row">
+                <span>좌측 패널</span>
+                <input id="leftPanelFontSizeSetting" type="range" min="14" max="22" step="1" />
+                <output id="leftPanelFontSizeValue" for="leftPanelFontSizeSetting">16px</output>
+              </label>
+              <label class="font-size-row">
+                <span>우측 패널</span>
+                <input id="rightPanelFontSizeSetting" type="range" min="14" max="22" step="1" />
+                <output id="rightPanelFontSizeValue" for="rightPanelFontSizeSetting">16px</output>
+              </label>
+            </section>
+            <section id="settingsPreview" class="settings-preview" aria-label="보기 미리보기">
+              <div class="settings-preview-head">
+                <strong>미리보기</strong>
+                <span>법령 문서</span>
+              </div>
+              <div class="settings-preview-layout">
+                <div class="settings-preview-left">
+                  <strong>탐색</strong>
+                  <span>📁 민법</span>
+                  <span>MD 법률.md</span>
+                </div>
+                <div class="settings-preview-body">
+                  <strong>제1조 목적</strong>
+                  <p>권리의 행사는 신의에 좇아 성실히 하여야 합니다.</p>
+                </div>
+                <div class="settings-preview-right">
+                  <strong>목차</strong>
+                  <span>제1조</span>
+                  <span>제2조</span>
+                </div>
+              </div>
+            </section>
+          </section>
+          <section id="settingsSourceTab" class="panel-tab-panel settings-tab-panel hidden" role="tabpanel">
+            <label class="field">
+              <span>원문 소스</span>
+              <select id="sourceMode">
+                <option value="github">GitHub</option>
+                  <option value="local-bridge">로컬 Git 연결</option>
+                <option value="local-folder">로컬 폴더</option>
+              </select>
+            </label>
+            <label id="githubTokenField" class="field token-field">
+              <div class="field-label-row">
+                <span>GitHub 접근 토큰</span>
+                <details class="field-help">
+                  <summary aria-label="GitHub 접근 토큰 도움말">ℹ️</summary>
+                  <div class="field-help-popover">
+                    <strong>GitHub 접근 토큰은 GitHub가 사용자를 확인하는 개인용 접근 키입니다.</strong>
+                    <p>비워 두어도 문서를 볼 수 있지만, GitHub의 비로그인 요청 한도가 낮아 목록·본문·변경 내역 조회가 중간에 멈출 수 있습니다.</p>
+                    <p>GitHub에 로그인한 뒤 Developer settings에서 Fine-grained personal access token을 만들고, Repository access는 Public repositories, 권한은 Contents: Read-only만 선택하세요.</p>
+                    <p>토큰은 이 브라우저 저장소에만 저장됩니다. 다른 사람과 공유하지 마세요.</p>
+                    <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noreferrer">GitHub 공식 안내 열기</a>
+                  </div>
+                </details>
+              </div>
+              <div class="token-input-row">
+                <input id="githubToken" type="password" autocomplete="off" />
+                <button id="clearTokenButton" class="button" type="button">토큰 삭제</button>
+              </div>
+            </label>
+            <label id="localBridgeUrlField" class="field" hidden>
+              <span>로컬 Git 연결 URL</span>
+              <input id="bridgeUrl" type="url" value="http://127.0.0.1:8765" />
+            </label>
+            <div id="localFolderField" class="field" hidden>
+              <span>로컬 폴더</span>
+              <div class="browse-row">
+                <input id="localFolderPath" type="text" readonly placeholder="선택된 폴더 없음" />
+                <button id="settingsPickFolderButton" class="button" type="button">찾아보기</button>
+              </div>
+            </div>
+            <p id="settingsNote" class="muted settings-note"></p>
+          </section>
+          <section id="settingsLicenseTab" class="panel-tab-panel settings-tab-panel hidden" role="tabpanel">
+            <section class="settings-section license-section" aria-labelledby="licenseHeading">
+              <h2 id="licenseHeading">오픈소스 라이선스</h2>
+              <p class="license-intro">
+                이 확장은 아래 주요 오픈소스를 포함하거나 런타임에서 사용합니다. 각 라이선스 전문은 확장 패키지에 함께 포함되어 있습니다.
+              </p>
+              <div class="license-list">
+                <article class="license-item">
+                  <div>
+                    <h3>rhwp</h3>
+                    <p>HWP/HWPX 첨부 문서를 브라우저 안에서 미리보기 위해 사용합니다.</p>
+                  </div>
+                  <dl>
+                    <div><dt>버전</dt><dd>0.7.17</dd></div>
+                    <div><dt>라이선스</dt><dd>MIT</dd></div>
+                  </dl>
+                  <div class="license-links">
+                    <a href="vendor/rhwp/LICENSE" target="_blank" rel="noreferrer">라이선스 전문</a>
+                    <a href="https://github.com/edwardkim/rhwp" target="_blank" rel="noreferrer">GitHub</a>
+                  </div>
+                </article>
+                <article class="license-item">
+                  <div>
+                    <h3>PDF.js</h3>
+                    <p>PDF 첨부 문서를 별도 프로그램 없이 미리보기 위해 사용합니다.</p>
+                  </div>
+                  <dl>
+                    <div><dt>버전</dt><dd>6.1.200</dd></div>
+                    <div><dt>라이선스</dt><dd>Apache-2.0</dd></div>
+                  </dl>
+                  <div class="license-links">
+                    <a href="vendor/pdfjs/LICENSE" target="_blank" rel="noreferrer">라이선스 전문</a>
+                    <a href="https://github.com/mozilla/pdf.js" target="_blank" rel="noreferrer">GitHub</a>
+                  </div>
+                </article>
+                <article class="license-item">
+                  <div>
+                    <h3>markdown-it</h3>
+                    <p>Markdown 원문을 본문 화면에 렌더링하기 위해 사용합니다.</p>
+                  </div>
+                  <dl>
+                    <div><dt>버전</dt><dd>14.2.0</dd></div>
+                    <div><dt>라이선스</dt><dd>MIT</dd></div>
+                  </dl>
+                  <div class="license-links">
+                    <a href="vendor/markdown-it.LICENSE" target="_blank" rel="noreferrer">라이선스 전문</a>
+                    <a href="https://github.com/markdown-it/markdown-it" target="_blank" rel="noreferrer">GitHub</a>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </section>
+          <div class="dialog-actions">
+            <button id="saveSettingsButton" class="button primary" value="default" type="button">저장</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="rateLimitHelpDialog" class="settings-dialog help-dialog">
+        <form method="dialog">
+          <header class="dialog-head">
+            <strong>GitHub 요청 한도 해결 방법</strong>
+            <button class="ghost-button" value="close" type="submit">닫기</button>
+          </header>
+          <img
+            class="token-guide-image"
+            src="assets/github-token-guide.svg"
+            alt="GitHub 접근 토큰 발급과 설정 입력 절차"
+          />
+          <section class="help-copy">
+            <h2>GitHub 접근 토큰이 무엇인가요?</h2>
+            <p>
+              GitHub 접근 토큰은 GitHub가 사용자를 확인할 때 쓰는 개인용 접근 키입니다. 비밀번호가 아니며,
+              이 뷰어에서는 GitHub 요청 한도를 늘리고 공개 원문 목록과 변경 내역을 더 안정적으로 읽기 위해 사용합니다.
+            </p>
+            <h2>어떤 권한이 필요한가요?</h2>
+            <p>
+              문서를 읽기만 하므로 쓰기 권한은 필요하지 않습니다. Fine-grained personal access token을 만들고,
+              Repository access는 공개 저장소 읽기 또는 필요한 저장소만 선택, Repository permissions의 Contents는 Read-only로 두세요.
+            </p>
+            <ol>
+              <li>GitHub에 로그인한 뒤 프로필 메뉴에서 Settings를 엽니다.</li>
+              <li>Developer settings → Personal access tokens → Fine-grained tokens로 이동합니다.</li>
+              <li>Generate new token을 누르고 이름, 만료일, 저장소 접근 범위를 정합니다.</li>
+              <li>Contents 권한을 Read-only로 설정한 뒤 Generate token을 누릅니다.</li>
+              <li>생성 직후 보이는 토큰을 복사해 설정의 GitHub 접근 토큰 칸에 붙여넣고 저장합니다.</li>
+            </ol>
+            <p class="muted">
+              토큰은 생성 직후 한 번만 볼 수 있습니다. 다른 사람에게 공유하지 말고, 필요 없어진 토큰은 GitHub 설정에서 삭제하세요.
+            </p>
+          </section>
+          <div class="dialog-actions">
+            <a
+              class="button link-button"
+              href="https://github.com/settings/personal-access-tokens/new?name=Legalize-KR%20Viewer&description=Read%20Legalize-KR%20public%20documents&contents=read&expires_in=30"
+              target="_blank"
+              rel="noreferrer"
+            >토큰 만들기</a>
+            <a
+              class="button link-button"
+              href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens"
+              target="_blank"
+              rel="noreferrer"
+            >GitHub 공식 안내</a>
+            <button id="openTokenSettingsButton" class="button primary" type="button">설정에 입력하기</button>
+          </div>
+        </form>
+      </dialog>
+    </div>
+  </body>
+</html>

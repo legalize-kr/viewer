@@ -1,0 +1,18 @@
+{
+  "name": "legalize-kr-viewer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "smoke:hwp": "node scripts/hwp-smoke.mjs",
+    "smoke:github": "node scripts/github-smoke.mjs",
+    "build:extension": "node scripts/build-extension.mjs",
+    "verify": "npm run test && npm run build:extension"
+  },
+  "devDependencies": {
+    "@rhwp/core": "^0.7.17",
+    "markdown-it": "^14.2.0",
+    "pdfjs-dist": "^6.1.200"
+  }
+}
