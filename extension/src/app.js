@@ -704,17 +704,21 @@ async function readLocalMarkdown(path) {
 }
 
 async function fetchMarkdownAtRef(path, ref) {
+  return fetchMarkdownAtDocumentRef({ repo: selectedRepoName(), path }, ref);
+}
+
+async function fetchMarkdownAtDocumentRef(document, ref) {
   if (state.settings.sourceMode === "local-folder") {
-    return readLocalMarkdown(path);
+    return readLocalMarkdown(document.path);
   }
   if (state.settings.sourceMode === "local-bridge") {
-    return fetchLocalBridgeMarkdown({ bridgeUrl: state.settings.bridgeUrl, repo: selectedRepoName(), path, ref });
+    return fetchLocalBridgeMarkdown({ bridgeUrl: state.settings.bridgeUrl, repo: document.repo, path: document.path, ref });
   }
   return fetchGithubMarkdown({
     owner: state.settings.githubOwner,
-    repo: selectedRepoName(),
+    repo: document.repo,
     ref,
-    path,
+    path: document.path,
     token: state.token
   });
 }
@@ -755,11 +759,38 @@ function normalizedDate(value) {
   return `${match[1]}-${match[2].padStart(2, "0")}-${match[3].padStart(2, "0")}`;
 }
 
-function displayHistoryDate(date) {
-  if (state.document?.repo !== "precedent-kr" || String(date ?? "").slice(0, 10) !== "1970-01-01") {
+function isUnixEpochHistoryDate(date) {
+  return String(date ?? "").slice(0, 10) === "1970-01-01";
+}
+
+function frontmatterHistoryDate(frontmatter, repo) {
+  if (repo === "precedent-kr") {
+    return normalizedDate(frontmatter?.["선고일자"]);
+  }
+  if (repo === "legalize-kr") {
+    return normalizedDate(frontmatter?.["공포일자"]) || normalizedDate(frontmatter?.["시행일자"]);
+  }
+  return (
+    normalizedDate(frontmatter?.["공포일자"]) ||
+    normalizedDate(frontmatter?.["발령일자"]) ||
+    normalizedDate(frontmatter?.["시행일자"])
+  );
+}
+
+async function displayHistoryDate(date, ref, document = state.document) {
+  if (!isUnixEpochHistoryDate(date) || !document) {
     return date ?? "";
   }
-  return normalizedDate(state.document.frontmatter?.["선고일자"]) || date || "";
+  if (ref) {
+    try {
+      const markdown = await fetchMarkdownAtDocumentRef(document, ref);
+      const resolved = frontmatterHistoryDate(splitFrontmatter(markdown).frontmatter, document.repo);
+      if (resolved) return resolved;
+    } catch {
+      return date ?? "";
+    }
+  }
+  return frontmatterHistoryDate(document.frontmatter, document.repo) || date || "";
 }
 
 function documentTypeLabel() {
@@ -1251,24 +1282,26 @@ async function loadHistory(until) {
             owner: state.settings.githubOwner,
             token: state.token
           });
-    state.history = normalizeHistoryCommits(history);
+    state.history = await normalizeHistoryCommits(history, state.document);
     renderHistory();
   } catch (error) {
     $("historyList").innerHTML = renderErrorLine(error.message);
   }
 }
 
-function normalizeHistoryCommits(commits) {
-  return commits.map((commit) => {
-    const messageBody = commit.messageBody ?? commit.body ?? commit.fullMessage ?? commit.message ?? commit.sha;
-    const date = displayHistoryDate(commit.date);
-    return {
-      ...commit,
-      date,
-      message: commit.message ?? String(messageBody).split("\n")[0],
-      messageBody
-    };
-  });
+function normalizeHistoryCommits(commits, document = state.document) {
+  return Promise.all(commits.map((commit) => normalizeHistoryCommit(commit, document)));
+}
+
+async function normalizeHistoryCommit(commit, document) {
+  const messageBody = commit.messageBody ?? commit.body ?? commit.fullMessage ?? commit.message ?? commit.sha;
+  const date = await displayHistoryDate(commit.date, commit.sha, document);
+  return {
+    ...commit,
+    date,
+    message: commit.message ?? String(messageBody).split("\n")[0],
+    messageBody
+  };
 }
 
 function renderHistory() {

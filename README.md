@@ -24,7 +24,9 @@ Legalize-KR Viewer는 법령, 판례, 행정규칙, 자치법규 Markdown 저장
 
 ### 개정 이력 비교
 
-![개정 이력 비교 화면](docs/screenshots/legalize-kr-viewer-history.png)
+![개정 이력 타임라인 화면](docs/screenshots/legalize-kr-viewer-history.png)
+
+![개정 이력 비교 화면](docs/screenshots/legalize-kr-viewer-history-compare.png)
 
 ### HWP 첨부 미리보기
 

@@ -394,8 +394,12 @@ assert(appJs.includes("frontmatterSourceUrl"), "app.js must derive original law 
 assert(appJs.includes('frontmatter["출처"]'), "app.js must use only the frontmatter source field for law source URLs");
 assert(appJs.includes("law\\.go\\.kr"), "app.js must only use law.go.kr URLs for the law source menu item");
 assert(appJs.includes("normalizedDate"), "app.js must normalize document-provided dates");
-assert(appJs.includes('state.document?.repo !== "precedent-kr"'), "precedent-specific date fallback must not affect other repositories");
-assert(appJs.includes('state.document.frontmatter?.["선고일자"]'), "1970-01-01 precedent history dates must fall back to the judgment date");
+assert(appJs.includes("isUnixEpochHistoryDate"), "history date fallback must only handle Unix epoch commit dates");
+assert(appJs.includes("frontmatterHistoryDate"), "history dates must be resolved from document frontmatter");
+assert(appJs.includes('frontmatter?.["공포일자"]'), "1970-01-01 law history dates must fall back to the promulgation date");
+assert(appJs.includes('frontmatter?.["시행일자"]'), "law history dates must fall back to the enforcement date when promulgation date is missing");
+assert(appJs.includes('frontmatter?.["선고일자"]'), "1970-01-01 precedent history dates must fall back to the judgment date");
+assert(appJs.includes("fetchMarkdownAtDocumentRef(document, ref)"), "history date fallback must inspect the document at the selected revision");
 assert(appJs.includes("updateSourceViewLinks"), "app.js must update the original-source menu links");
 assert(appJs.includes("sourceLawLink"), "app.js must conditionally render the law.go.kr source link");
 assert(!appJs.includes('$("githubLink")'), "app.js must not update the removed GitHub text link");
