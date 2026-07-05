@@ -50,19 +50,63 @@ function assert(condition, message) {
 }
 
 const manifest = JSON.parse(await readFile(resolve(extension, "manifest.json"), "utf8"));
-const buildExtensionJs = await readFile(resolve(root, "scripts", "build-extension.mjs"), "utf8");
+const packageJson = JSON.parse(await readFile(resolve(root, "package.json"), "utf8"));
+const buildChromiumJs = await readFile(resolve(root, "scripts", "build-chromium.mjs"), "utf8");
+const buildFirefoxJs = await readFile(resolve(root, "scripts", "build-firefox.mjs"), "utf8");
+const buildDesktopJs = await readFile(resolve(root, "scripts", "build-desktop.mjs"), "utf8");
+const tauriConfig = JSON.parse(await readFile(resolve(root, "src-tauri", "tauri.conf.json"), "utf8"));
+const tauriCargoToml = await readFile(resolve(root, "src-tauri", "Cargo.toml"), "utf8");
+const tauriMainRs = await readFile(resolve(root, "src-tauri", "src", "main.rs"), "utf8");
+const tauriIcon = await readFile(resolve(root, "src-tauri", "icons", "icon.png"));
 const serviceWorkerJs = await readFile(resolve(extension, "service-worker.js"), "utf8");
 const attachmentCorsRules = JSON.parse(await readFile(resolve(extension, "rules/law-attachments-cors.json"), "utf8"));
 assert(manifest.manifest_version === 3, "manifest must be MV3");
 assert(manifest.name === "Legalize-KR Viewer", "manifest name must use the released project name");
-assert(manifest.version === "0.1.0", "manifest version must reset for the new repository");
+assert(manifest.version === "0.1.2", "manifest version must match the current release");
+assert(packageJson.version === manifest.version, "package version must match the extension manifest version");
+assert(packageJson.scripts["build:chromium"] === "node scripts/build-chromium.mjs", "package must expose Chromium extension build target");
+assert(packageJson.scripts["build:extension"] === "npm run build:chromium", "legacy extension build target must delegate to Chromium build");
+assert(packageJson.scripts["build:firefox"] === "node scripts/build-firefox.mjs", "package must expose Firefox build target");
+assert(packageJson.scripts["build:desktop"] === "node scripts/build-desktop.mjs", "package must expose desktop frontend build target");
+assert(packageJson.scripts["desktop:build"] === "tauri build --bundles app", "package must expose Tauri desktop app bundle target");
+assert(packageJson.scripts.verify.includes("build:chromium"), "verify must build the Chromium artifact");
+assert(packageJson.scripts.verify.includes("build:firefox"), "verify must build the Firefox artifact");
+assert(packageJson.scripts.verify.includes("build:desktop"), "verify must build the desktop frontend artifact");
+assert(packageJson.scripts.verify.includes("verify:artifacts"), "verify must inspect generated artifacts after building");
+assert(packageJson.devDependencies["@tauri-apps/cli"], "desktop build must declare the Tauri CLI dev dependency");
 assert(manifest.key, "manifest key is required for stable development extension ID");
 const keyBytes = Buffer.from(manifest.key, "base64");
 const digest = createHash("sha256").update(keyBytes).digest().subarray(0, 16);
 const alphabet = "abcdefghijklmnop";
 const extensionId = [...digest].map((byte) => alphabet[byte >> 4] + alphabet[byte & 15]).join("");
 assert(extensionId === "hceodioeamflhfelpepcimgjpbgoooaf", "stable extension ID mismatch");
-assert(buildExtensionJs.includes("delete webStoreManifest.key"), "Chrome Web Store build must omit manifest key");
+assert(buildChromiumJs.includes('const target = resolve(root, "dist-chromium")'), "Chromium build must publish to dist-chromium");
+assert(buildChromiumJs.includes('const legacyTarget = resolve(root, "dist-extension")'), "Chromium build must clean the legacy dist-extension artifact");
+assert(buildChromiumJs.includes("delete webStoreManifest.key"), "Chromium Web Store build must omit manifest key");
+assert(buildFirefoxJs.includes("dist-firefox"), "Firefox build must write a separate dist-firefox artifact");
+assert(buildFirefoxJs.includes("delete firefoxManifest.key"), "Firefox build must omit Chrome-only manifest key");
+assert(buildFirefoxJs.includes('id: "viewer@legalize.kr"'), "Firefox build must set a stable Gecko extension ID");
+assert(buildFirefoxJs.includes('strict_min_version: "121.0"'), "Firefox build must require the MV3 background fallback baseline");
+assert(
+  buildFirefoxJs.includes("scripts: [manifest.background.service_worker]") &&
+    buildFirefoxJs.includes("service_worker: manifest.background.service_worker"),
+  "Firefox build must include both background.scripts and background.service_worker for MV3 compatibility"
+);
+assert(buildFirefoxJs.includes("delete firefoxManifest.background.type"), "Firefox background fallback must not require module service workers");
+assert(buildDesktopJs.includes("dist-desktop"), "desktop build must write a separate dist-desktop artifact");
+assert(buildDesktopJs.includes('resolve(target, "index.html")'), "desktop build must expose viewer.html as index.html for Tauri");
+assert(tauriConfig.productName === "Legalize-KR Viewer", "Tauri product name mismatch");
+assert(tauriConfig.identifier === "kr.legalize.viewer", "Tauri identifier mismatch");
+assert(tauriConfig.build.beforeBuildCommand === "npm run build:desktop", "Tauri build must generate desktop frontend first");
+assert(tauriConfig.build.frontendDist === "../dist-desktop", "Tauri frontendDist must use dist-desktop");
+assert(tauriConfig.app.withGlobalTauri === true, "Tauri app must expose the global API for future native bridges");
+assert(tauriConfig.app.windows?.[0]?.title === "Legalize-KR Viewer", "Tauri window title mismatch");
+assert(tauriConfig.app.windows?.[0]?.width >= 1200, "Tauri window must fit the reader layout");
+assert(tauriConfig.bundle.active === true, "Tauri bundle must be active");
+assert(tauriCargoToml.includes('tauri = { version = "2"'), "Tauri Cargo manifest must use Tauri v2");
+assert(tauriCargoToml.includes('tauri-build = { version = "2"'), "Tauri build dependency must use Tauri v2");
+assert(tauriMainRs.includes("tauri::Builder::default()"), "Tauri entrypoint must create a Builder");
+assert(tauriIcon.length > 0, "Tauri app icon must exist");
 assert(manifest.permissions.includes("storage"), "manifest must include storage permission");
 assert(
   manifest.permissions.includes("declarativeNetRequestWithHostAccess"),

@@ -1,6 +1,6 @@
 # Legalize-KR Viewer
 
-Legalize-KR Viewer는 법령, 판례, 행정규칙, 자치법규 Markdown 저장소를 Chrome에서 읽기 전용으로 탐색하는 뷰어입니다. GitHub 원문과 로컬 원문 소스를 같은 화면에서 열람하고, 조문 목차, 첨부 미리보기, 개정 이력 비교를 제공합니다.
+Legalize-KR Viewer는 법령, 판례, 행정규칙, 자치법규 Markdown 저장소를 브라우저 확장과 데스크톱 앱에서 읽기 전용으로 탐색하는 뷰어입니다. GitHub 원문과 로컬 원문 소스를 같은 화면에서 열람하고, 조문 목차, 첨부 미리보기, 개정 이력 비교를 제공합니다.
 
 ![본문과 탐색 화면](docs/screenshots/legalize-kr-viewer-document.png)
 
@@ -38,19 +38,37 @@ Legalize-KR Viewer는 법령, 판례, 행정규칙, 자치법규 Markdown 저장
 
 ## 설치해서 확인하기
 
-먼저 확장 산출물을 생성합니다.
+먼저 산출물을 생성합니다.
 
 ```bash
 npm run verify
 ```
 
-Chrome에서 `chrome://extensions`를 열고 개발자 모드를 켠 뒤, `Load unpacked`에서 다음 디렉터리를 선택합니다.
+Chrome, Edge, Brave, Whale 등 Chromium 기반 브라우저에서는 확장 관리 화면을 열고 개발자 모드를 켠 뒤, unpacked extension으로 다음 디렉터리를 선택합니다.
 
 ```text
-dist-extension
+dist-chromium
 ```
 
-개발 중 빠르게 확인할 때는 `extension/`을 직접 선택할 수 있습니다. 배포 전 수동 확인은 항상 `dist-extension/` 기준으로 진행합니다.
+Firefox에서는 임시 부가 기능으로 다음 디렉터리의 `manifest.json`을 선택합니다.
+
+```text
+dist-firefox
+```
+
+데스크톱 앱 frontend 산출물은 다음 디렉터리에 생성됩니다.
+
+```text
+dist-desktop
+```
+
+Tauri CLI와 Rust dependency가 준비된 환경에서는 native macOS app bundle을 생성할 수 있습니다.
+
+```bash
+npm run desktop:build
+```
+
+개발 중 빠르게 확인할 때는 `extension/`을 직접 선택할 수 있습니다. 배포 전 수동 확인은 항상 `dist-chromium/`, `dist-firefox`, `dist-desktop` 기준으로 진행합니다.
 
 ## 사용 흐름
 
@@ -72,20 +90,29 @@ dist-extension
 
 ## 프로젝트 구조
 
-- `extension/`: Chrome MV3 unpacked extension 원본
+- `extension/`: MV3 extension 원본
 - `extension/icons/`: extension icon 원본 SVG와 크기별 PNG
 - `extension/metadata/`: 검색 보조용 metadata index와 repo별 lazy shard
-- `dist-extension/`: `npm run build:extension` 산출물
+- `dist-chromium/`: `npm run build:chromium` 산출물
+- `dist-firefox/`: `npm run build:firefox` 산출물
+- `dist-desktop/`: `npm run build:desktop` 산출물
+- `src-tauri/`: Tauri desktop app shell
 - `docs/screenshots/`: README와 Chrome Web Store 후보 스크린샷
 - `scripts/`: 로컬 테스트, 빌드, smoke 검증 스크립트
 - `native-host/`: Native Messaging host 프로토타입과 manifest 템플릿
 
 ## 검증 명령
 
-전체 정적 테스트와 산출물 생성을 실행합니다.
+전체 정적 테스트와 Chromium, Firefox, desktop frontend 산출물 생성을 실행합니다.
 
 ```bash
 npm run verify
+```
+
+macOS app bundle까지 확인할 때는 다음 명령을 실행합니다.
+
+```bash
+npm run desktop:build
 ```
 
 4종 GitHub 원격 저장소의 tree/raw 접근만 별도로 확인하려면 네트워크가 가능한 환경에서 다음을 실행합니다.

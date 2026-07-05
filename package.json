@@ -1,17 +1,23 @@
 {
   "name": "legalize-kr-viewer",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "scripts": {
     "test": "node scripts/test.mjs",
     "smoke:hwp": "node scripts/hwp-smoke.mjs",
     "smoke:github": "node scripts/github-smoke.mjs",
-    "build:extension": "node scripts/build-extension.mjs",
-    "verify": "npm run test && npm run build:extension"
+    "build:chromium": "node scripts/build-chromium.mjs",
+    "build:extension": "npm run build:chromium",
+    "build:firefox": "node scripts/build-firefox.mjs",
+    "build:desktop": "node scripts/build-desktop.mjs",
+    "desktop:build": "tauri build --bundles app",
+    "verify:artifacts": "node scripts/verify-artifacts.mjs",
+    "verify": "npm run test && npm run build:chromium && npm run build:firefox && npm run build:desktop && npm run verify:artifacts"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
     "@rhwp/core": "^0.7.17",
     "markdown-it": "^14.2.0",
     "pdfjs-dist": "^6.1.200"

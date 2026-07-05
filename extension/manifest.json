@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Legalize-KR Viewer",
   "short_name": "Legalize-KR",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwqcKjD+LCOijJPp7vhHa0TVzILQDVlyLB/EU1NzDiOHLwN7e3Z/ehWytpd6uu9TOLJexcUQnaFzEUrfUVruCe3qqHSnPnnrL3aA+yz6d8oS7+xe7m1HRbHWrNWCR5GO6u0gntqYQX1sIi9U7Z+hGba6PWRGfnkbxtdQKAhmNFbVUSi628kwf2KLcWHtHxhKwNdIugFcjnK1wjUajZJ1KFzCWKc6fvyVAtolvWStnSIcOf36kefI/+bTC29OgFhUuV1dtfedFjztMnvewAhCy4FmH57DUKvFjACRfg9m6Fwt5IxMu66EG14kRul6jbKUl14Ubv/+qGHKgeQ9WrSeA1wIDAQAB",
   "description": "법령, 판례, 행정규칙, 자치법규 Markdown Git 이력을 탐색합니다.",
   "icons": {

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Legalize-KR Viewer",
+  "version": "0.1.2",
+  "identifier": "kr.legalize.viewer",
+  "build": {
+    "beforeBuildCommand": "npm run build:desktop",
+    "beforeDevCommand": "npm run build:desktop",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../dist-desktop"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Legalize-KR Viewer",
+        "width": 1280,
+        "height": 840,
+        "minWidth": 980,
+        "minHeight": 680,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Reference"
+  }
+}
