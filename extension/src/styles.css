@@ -1157,6 +1157,7 @@ button {
 
 .markdown-body p,
 .markdown-body li {
+  white-space: pre-line;
   overflow-wrap: anywhere;
 }
 

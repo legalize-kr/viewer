@@ -1,4 +1,4 @@
-name: Release extension
+name: Release viewer
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  release:
+  web-assets:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -21,30 +21,35 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Build extension
-        run: node scripts/build-extension.mjs
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Package extension ZIP
+      - name: Build web artifacts
+        run: npm run verify
+
+      - name: Package web artifacts
         id: package
         run: |
           version="${GITHUB_REF_NAME#v}"
-          zip_name="legalize-kr-viewer-${version}.zip"
-          (cd dist-extension && zip -r "../${zip_name}" .)
-          echo "zip_name=${zip_name}" >>"$GITHUB_OUTPUT"
+          mkdir -p release-assets
+          (cd dist-chromium && zip -r "../release-assets/legalize-kr-viewer-chromium-${version}.zip" .)
+          (cd dist-firefox && zip -r "../release-assets/legalize-kr-viewer-firefox-${version}.zip" .)
+          (cd dist-desktop && zip -r "../release-assets/legalize-kr-viewer-desktop-${version}.zip" .)
+          echo "asset_dir=release-assets" >>"$GITHUB_OUTPUT"
 
-      - name: Publish GitHub Release asset
+      - name: Publish GitHub Release assets
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ github.ref_name }}
-          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+          ASSET_DIR: ${{ steps.package.outputs.asset_dir }}
         run: |
           if ! gh release view "$TAG_NAME" >/dev/null 2>&1; then
             gh release create "$TAG_NAME" \
               --title "$TAG_NAME" \
-              --notes "Chrome extension package for the Legalize-KR viewer."
+              --notes "Legalize-KR Viewer release."
           fi
-          gh release upload "$TAG_NAME" "$ZIP_NAME" --clobber
+          gh release upload "$TAG_NAME" "$ASSET_DIR"/* --clobber
 
       # Publishes to the Chrome Web Store only when the required OAuth secrets
       # are configured. Add repository secrets CWS_EXTENSION_ID, CWS_CLIENT_ID,
@@ -55,9 +60,10 @@ jobs:
           CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
           CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
-          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
         if: ${{ env.CWS_EXTENSION_ID != '' }}
         run: |
+          version="${GITHUB_REF_NAME#v}"
+          ZIP_NAME="release-assets/legalize-kr-viewer-chromium-${version}.zip"
           npx --yes chrome-webstore-upload-cli@3 upload \
             --source "$ZIP_NAME" \
             --extension-id "$CWS_EXTENSION_ID" \
@@ -65,3 +71,39 @@ jobs:
             --client-secret "$CWS_CLIENT_SECRET" \
             --refresh-token "$CWS_REFRESH_TOKEN" \
             --auto-publish
+
+  macos-app:
+    runs-on: macos-latest
+    needs: web-assets
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build macOS app bundle
+        run: npm run desktop:build
+
+      - name: Package macOS app bundle
+        id: package
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p release-assets
+          ditto -c -k --sequesterRsrc --keepParent \
+            "src-tauri/target/release/bundle/macos/Legalize-KR Viewer.app" \
+            "release-assets/legalize-kr-viewer-macos-${version}.zip"
+          echo "asset_dir=release-assets" >>"$GITHUB_OUTPUT"
+
+      - name: Publish macOS Release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          ASSET_DIR: ${{ steps.package.outputs.asset_dir }}
+        run: gh release upload "$TAG_NAME" "$ASSET_DIR"/* --clobber

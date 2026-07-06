@@ -62,7 +62,7 @@ const serviceWorkerJs = await readFile(resolve(extension, "service-worker.js"), 
 const attachmentCorsRules = JSON.parse(await readFile(resolve(extension, "rules/law-attachments-cors.json"), "utf8"));
 assert(manifest.manifest_version === 3, "manifest must be MV3");
 assert(manifest.name === "Legalize-KR Viewer", "manifest name must use the released project name");
-assert(manifest.version === "0.1.2", "manifest version must match the current release");
+assert(manifest.version === "0.1.3", "manifest version must match the current release");
 assert(packageJson.version === manifest.version, "package version must match the extension manifest version");
 assert(packageJson.scripts["build:chromium"] === "node scripts/build-chromium.mjs", "package must expose Chromium extension build target");
 assert(packageJson.scripts["build:extension"] === "npm run build:chromium", "legacy extension build target must delegate to Chromium build");
@@ -290,6 +290,7 @@ assert(!viewerHtml.includes("GitHub 원격, 로컬 Git 연결, 로컬 폴더 중
 assert(!viewerHtml.includes("data-query="), "quick repository buttons must not start a search query");
 assert(!stylesCss.includes(".layout.right-collapsed .markdown-body"), "document body width must not depend on a right-panel-only override");
 assert(stylesCss.includes(".markdown-body") && stylesCss.includes("width: 100%") && stylesCss.includes("max-width: none"), "document body must always fill the available workspace width");
+assert(stylesCss.includes("white-space: pre-line"), "markdown body paragraphs must preserve source line breaks");
 assert(stylesCss.includes(".document-view") && stylesCss.includes("min-width: 0"), "document view must be allowed to shrink and grow with panel changes");
 assert(stylesCss.includes("var(--left-panel-width"), "styles must use persisted left panel width");
 assert(stylesCss.includes(".panel-rail"), "styles must define thin panel rails");
